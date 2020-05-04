@@ -14,6 +14,10 @@ public class FirstBadVersion {
         }
         return left;
     }
+
+    public boolean isBadVersion(int num) {
+        return true;
+    }
 }
 
 
