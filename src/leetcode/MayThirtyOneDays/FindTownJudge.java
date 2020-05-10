@@ -1,5 +1,6 @@
 package leetcode.MayThirtyOneDays;
 
+// I like the graph style content
 public class FindTownJudge {
     public int findJudge(int N, int[][] trust) {
         int[] indegree = new int[N + 1];
