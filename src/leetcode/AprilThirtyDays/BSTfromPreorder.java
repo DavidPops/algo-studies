@@ -1,6 +1,8 @@
 package leetcode.AprilThirtyDays;
 
 //import javax.swing.tree.TreeNode;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 class TreeNode {
@@ -37,7 +39,7 @@ class StackSolution {
     }
 }
 
-class RecursiveSolution {
+class RecursiveSolution { // coded this in python with Moore
     public TreeNode bstFromPreorder(int[] preorder) {
         TreeNode root = null;
         for (int value : preorder) {
@@ -125,6 +127,85 @@ class RangeSolution {
 
 
     }
+}
 
+class MooreSolution {
+    int idx = 0;
+    public TreeNode bstFromPreorder(int[] preorder) {
+        return go(preorder, Integer.MAX_VALUE);
+    }
 
+    public TreeNode go(int[] preorder, int parent) {
+        if (idx == preorder.length || preorder[idx] > parent) return null;
+        int curr = preorder[idx++];
+        TreeNode node = new TreeNode(curr);
+
+        node.left = go(preorder, curr);
+        node.right = go(preorder, parent);
+
+        return node;
+    }
+
+    public static void main(String[] args) {
+        MooreSolution s1 = new MooreSolution();
+        s1.bstFromPreorder(new int[]{8,5,1,7,10,12});
+    }
+}
+
+class ILikeSolution {
+    public TreeNode bstFromPreorder(int[] preorder) {
+        if (preorder == null || preorder.length == 0)
+            return null;
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode root = new TreeNode(preorder[0]);
+        stack.push(root);
+
+        for (int i = 1; i < preorder.length; i++) {
+            TreeNode cur = new TreeNode(preorder[i]);
+            if (!stack.isEmpty() && cur.val < stack.peek().val)
+                stack.peek().left = cur;
+            else {
+                TreeNode parent = null;
+                while (!stack.isEmpty() && stack.peek().val < cur.val)
+                    parent = stack.pop();
+                parent.right = cur;
+            }
+            stack.push(cur);
+        }
+
+        return root;
+    }
+
+    public static void main(String[] args) {
+        ILikeSolution s1 = new ILikeSolution();
+        s1.bstFromPreorder(new int[]{8,5,1,7,10,12});
+    }
+}
+
+class RecursiveSolution2 {
+    int index = 0;
+
+    public TreeNode bstFromPreorder(int[] preorder) {
+        return buildTree(preorder, Integer.MAX_VALUE);
+    }
+
+    private TreeNode buildTree(int[] preorder, int parent) {
+        TreeNode temp = new TreeNode(preorder[index++]);
+        if (index >= preorder.length)
+            return temp;
+        if (preorder[index] < temp.val) {
+            temp.left = buildTree(preorder, temp.val);
+        }
+        if (index >= preorder.length)
+            return temp;
+        if (preorder[index] > temp.val && preorder[index] < parent) {
+            temp.right = buildTree(preorder, parent);
+        }
+        return temp;
+    }
+
+    public static void main(String[] args) {
+        RecursiveSolution2 s1 = new RecursiveSolution2();
+        s1.bstFromPreorder(new int[]{8,5,1,7,10,12});
+    }
 }
